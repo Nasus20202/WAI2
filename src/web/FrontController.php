@@ -1,5 +1,7 @@
 <?php
+namespace routing;
 require '../../vendor/autoload.php';
+require_once('../Router.php');
 
 // global settings
 session_start();
@@ -12,11 +14,10 @@ class FrontController
     private $action;
     private $controller;
     // default route
-    const DEFAULT_CONTROLLER = 'home';
+    const DEFAULT_CONTROLLER = 'photo';
     const DEFAULT_ACTION = 'index';
 
-    public function __construct($controller = "", $action = "")
-    {
+    public function __construct($controller = "", $action = ""){
         if($controller == "" || $action == "")
             $this->extractControllerAndAction();
         else {
@@ -30,8 +31,7 @@ class FrontController
         $this->serve($this->controller, $this->action);
     }
 
-    private function extractControllerAndAction()
-    {
+    private function extractControllerAndAction(){
         $route = substr($_GET['route'], 1);
         $splittedRoute = explode('/', $route, 2);
         $this->controller = count($splittedRoute) > 0 ? $splittedRoute[0] : "";
@@ -43,16 +43,15 @@ class FrontController
     }
 
     public function serve($controller, $action){
-        echo $controller . ' ' . $action;
+        $router = new Router();
+        $router->dispatch($controller, $action);
     }
 
-    public function getAction()
-    {
+    public function getAction(){
         return $this->action;
     }
 
-    public function getController()
-    {
+    public function getController(){
         return $this->controller;
     }
 }
