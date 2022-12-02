@@ -36,6 +36,10 @@ class FrontController
         $splittedRoute = explode('/', $route, 2);
         $this->controller = count($splittedRoute) > 0 ? $splittedRoute[0] : "";
         $this->action = count($splittedRoute) > 1 ? $splittedRoute[1] : "";
+        // remove trailing slash
+        $actionLength = strlen($this->action);
+        if($actionLength > 0 && $this->action[$actionLength - 1] == '/')
+            $this->action = substr($this->action, 0, $actionLength - 1);
     }
 
     public function serve($controller, $action){
