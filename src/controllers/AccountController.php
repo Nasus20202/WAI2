@@ -1,7 +1,6 @@
 <?php
 namespace controllers;
-
-
+use routing\Router;
 require_once('Controller.php');
 
 class AccountController extends Controller implements IController {

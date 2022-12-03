@@ -1,7 +1,6 @@
 <?php
 namespace controllers;
-
-
+use routing\Router;
 require_once('Controller.php');
 
 class PhotoController extends Controller implements IController {
@@ -11,7 +10,7 @@ class PhotoController extends Controller implements IController {
     public function dispatch(){
         switch($this->getAction()){
             case 'test':
-                echo 'Photo test';
+                Router::redirect('account');
                 break;
             default:
                 $this->setAction(\routing\FrontController::DEFAULT_ACTION);
