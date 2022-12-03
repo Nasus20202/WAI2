@@ -30,9 +30,14 @@ abstract class Routes {
             if($route->controllerName == $controllerName)
                 return $route;
         }
-        // route for default controller
+        // route for default controller with just action given
         $action = $controllerName;
         $controllerName = FrontController::DEFAULT_CONTROLLER;
+        foreach($routes as $route){
+            if($route->controllerName == $controllerName)
+                return $route;
+        }
+        // nothing found
         return $routes[0];
     }
 }
