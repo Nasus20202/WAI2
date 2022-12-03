@@ -14,7 +14,7 @@ class AccountController extends Controller implements IController {
                 echo 'Account test';
                 break;
             default:
-                $this->setAction(\routing\FrontController::DEFAULT_ACTION);
+                $this->setAction(); // set dafault action
                 $this->index();
                 break;
         }

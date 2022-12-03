@@ -28,10 +28,10 @@ class Controller {
     public function getControllerName(){
         return $this->controllerName;
     }
-    protected function setAction($action){
+    protected function setAction($action = \routing\FrontController::DEFAULT_ACTION){
         $this->action = $action;
     }
-    protected function setControllerName($name){
+    protected function setControllerName($name = \routing\FrontController::DEFAULT_CONTROLLER){
         $this->controllerName = $name;
     }
 }
