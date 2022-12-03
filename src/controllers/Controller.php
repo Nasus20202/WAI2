@@ -16,7 +16,7 @@ class Controller {
     }
     public function render($model = null, $view = null){
         if($view == null){
-            require_once('../views/'. ucfirst($this->getControllerName()) . ucfirst($this->getAction()) . 'View.php');
+            require_once('../views/'. ucfirst($this->getControllerName()). '/' . ucfirst($this->getAction()) . 'View.php');
         }
         else {
             require_once($view);
