@@ -1,0 +1,2 @@
+<?php
+echo 'Account index';

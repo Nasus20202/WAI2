@@ -17,17 +17,23 @@ class Route {
 }
 
 abstract class Routes {
-    public static function getController($controllerName){
-        // routes definition
-        $routes = array(
+    // routes definition
+    private static function getRoutes(){
+        return array(
             new Route('photo', \controllers\PhotoController::class),
             new Route('account', \controllers\AccountController::class)
         );
+    }
+    public static function getController(&$controllerName, &$action){
+        $routes = Routes::getRoutes();
         foreach($routes as $route){
             if($route->controllerName == $controllerName)
                 return $route;
         }
-        return null;
+        // route for default controller
+        $action = $controllerName;
+        $controllerName = FrontController::DEFAULT_CONTROLLER;
+        return $routes[0];
     }
 }
 
