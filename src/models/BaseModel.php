@@ -6,7 +6,9 @@ class BaseModel {
     public $username;
     public $userEmail;
     public $message;
-    public function __construct($message = "", $userLoggedIn = false, $username = null, $userEmail = null){
+    public $pageTitle;
+    public function __construct($pageTitle = "", $message = "", $userLoggedIn = false, $username = null, $userEmail = null){
+        $this->pageTitle = $pageTitle;
         $this->message = $message;
         $this->userLoggedIn = $userLoggedIn;
         $this->username = $username;

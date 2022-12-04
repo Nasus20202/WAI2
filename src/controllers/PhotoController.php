@@ -13,13 +13,13 @@ class PhotoController extends Controller implements IController {
         $this->loadModel();
         $db = new Database();
         $photos = $db->getPhotos();
-        $model = new \models\Photo\IndexModel($photos);
+        $model = new \models\Photo\IndexModel($photos, "Galeria zdjęć");
         $this->render($model);
     }
     public function upload(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image']);
+            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image'], "Prześlij zdjęcia");
             $isFileGood = $this->validatePhoto($model);
             if($isFileGood){
                 $photo = new \database\Photo($model->title, $model->author, $model->extension);

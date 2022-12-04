@@ -9,8 +9,8 @@ class UploadModel extends BaseModel {
     public $private;
     public $image;
     public $extension;
-    public function __construct($title, $author, $image, $private = false, $message = "", $userLoggedIn = false, $username = null, $userEmail = null){
-        parent::__construct($message, $userLoggedIn, $username, $userEmail);
+    public function __construct($title, $author, $image, $private = false, $pageTitle = "", $message = "", $userLoggedIn = false, $username = null, $userEmail = null){
+        parent::__construct($pageTitle, $message, $userLoggedIn, $username, $userEmail);
         $this->title = $title;
         $this->author = $author;
         $this->private = $private;

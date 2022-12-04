@@ -1,4 +1,4 @@
-<h1>Galeria zdjęć</h1>
+<?php include __DIR__.'/../Layout/header.php'; ?>
 
 <?php foreach($model->photos as $photo): ?>
     <div class="photo">
@@ -8,3 +8,5 @@
         <img src="<?php echo $model->basePath . $photo->id . '.' . $photo->extension ?>" alt="<?php echo $photo->title; ?>">
     </div>
 <?php endforeach ?>
+
+<?php include __DIR__.'/../Layout/footer.php'; ?>
