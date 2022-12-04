@@ -9,11 +9,12 @@ interface IController {
 }
 
 class Controller {
-    protected $controllerName, $action;
+    protected $controllerName, $action, $method;
     public function __construct($name, $action)
     {
         $this->setAction($action);
         $this->setControllerName($name);
+        $this->setMethod($_SERVER['REQUEST_METHOD']);
     }
     public function render($model = null, $view = null){
         if($view == null){
@@ -23,16 +24,30 @@ class Controller {
             require_once($view);
         }
     }
+    protected function loadModel($path = null){
+        if($path == null){
+            require_once('../models/'. ucfirst($this->getControllerName()). '/' . ucfirst($this->getAction()) . 'Model.php');
+        }
+        else {
+            require_once($path);
+        }
+    }
     public function getAction(){
         return $this->action;
     }
     public function getControllerName(){
         return $this->controllerName;
     }
+    public function getMethod(){
+        return $this->method;
+    }
     protected function setAction($action = \routing\FrontController::DEFAULT_ACTION){
         $this->action = $action;
     }
     protected function setControllerName($name = \routing\FrontController::DEFAULT_CONTROLLER){
         $this->controllerName = $name;
+    }
+    protected function setMethod($method){
+        $this->method = $method;
     }
 }

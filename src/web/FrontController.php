@@ -5,6 +5,7 @@ require_once('../Router.php');
 
 // global settings
 session_start();
+define('__BASEDIR__', dirname(__FILE__).'/../');
 
 // create front controller
 $frontController = new FrontController();

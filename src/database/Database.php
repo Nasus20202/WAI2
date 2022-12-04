@@ -69,7 +69,7 @@ class Database {
     public function getPhotos(){
         $photos = [];
         foreach($this->db->photos->find()->toArray() as $photo){
-            $photos[] = new Photo($photo['title'], $photo['author'], $photo['ownerId'], $photo['private'], $photo['_id']);
+            $photos[] = new Photo($photo['title'], $photo['author'], $photo['extension'], $photo['ownerId'], $photo['private'], $photo['_id']);
         }
         return $photos;
     }
@@ -77,7 +77,7 @@ class Database {
         $photoInfo = $this->db->photos->findOne(['_id' => new ObjectID($id)]);
         if ($photoInfo == null)
             return null;
-        return new Photo($photoInfo['title'], $photoInfo['author'], $photoInfo['ownerId'], $photoInfo['private'], $photoInfo['_id']);
+        return new Photo($photoInfo['title'], $photoInfo['author'], $photoInfo['extension'], $photoInfo['ownerId'], $photoInfo['private'], $photoInfo['_id']);
     }
     public function createPhoto(&$photoObject){
         if($photoObject == null)
@@ -85,13 +85,14 @@ class Database {
         $photoArray = [
             'title' => $photoObject->title,
             'author' => $photoObject->author,
+            'extension' => $photoObject->extension,
             'ownerId' => $photoObject->ownerId,
             'private' => $photoObject->private,
             '_id' => new ObjectID()
         ];
         $photo = $this->getPhoto($photoObject->id);
         if($photo == null){
-            $this->db->photos->insertOne($photoObject);
+            $this->db->photos->insertOne($photoArray);
             $photoObject->id = $photoArray['_id'];
         }
     }
@@ -104,6 +105,7 @@ class Database {
             $photoInfo = [
                 'title' => $photo->title,
                 'author' => $photo->author,
+                'extension' => $photo->extension,
                 'ownerId' => $photo->ownerId,
                 'private' => $photo->private,
                 '_id' => new ObjectID($photo->id)

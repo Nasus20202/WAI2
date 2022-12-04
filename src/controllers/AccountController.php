@@ -2,6 +2,7 @@
 namespace controllers;
 use routing\Router;
 use database\Database;
+use models\Account;
 require_once('Controller.php');
 
 class AccountController extends Controller implements IController {
