@@ -33,7 +33,7 @@ class PhotoController extends Controller implements IController {
             }
         }
         else {
-            $this->render(new BaseModel());
+            $this->render(new BaseModel("Wyślij zdjęcie", "", 1));
         }
     }
     public function dispatch(){

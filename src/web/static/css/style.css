@@ -96,15 +96,11 @@ a {
 
 .card:hover {
     box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.3);
-    transform: scale(1.015);
+    transform: scale(1.005);
 }
 
 .card-img {
     transition: 1s;
-}
-
-.card-img:hover {
-    transform: scale(1.1);
 }
 
 .card-content {
@@ -284,6 +280,7 @@ header {
 .card {
     display: flex;
     justify-content: space-between;
+    flex-direction: column-reverse;
 }
 
 .card-content {
@@ -439,3 +436,121 @@ header {
         align-items: center;
     }
 }
+#logo {
+    margin: 10px 0;
+  }
+  
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 1fr;
+    column-gap: 30px;
+    row-gap: 30px;
+  }
+  .gallery-photo img {
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
+  }
+  
+  .gallery-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    flex: 0 0 auto;
+    transition-duration: 0.5s;
+  }
+  
+  .gallery-photo:hover {
+    transform: scale(1.025);
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.75);
+    animation: bgAnimation 0.5s;
+  }
+  
+  .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 3px;
+    z-index: 2;
+  }
+  
+  .modal-content {
+    animation-name: imgAnimation;
+    animation-duration: 0.8s;
+  }
+  
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 60px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  @keyframes imgAnimation {
+    0% {
+      transform: rotate(90deg) scale(0);
+      opacity: 0
+    }
+  
+    50% {
+      transform: rotate(0deg);
+      opacity: 1
+    }
+  
+    100% {
+      transform: scale(1)
+    }
+  }
+  
+  @keyframes bgAnimation {
+    0% {
+      opacity: 0;
+    }
+  
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @media only screen and (max-width: 1200px) {
+    .gallery {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 1fr;
+    }
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .gallery {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 1fr;
+    }
+  
+    .modal-content {
+      width: 100%;
+    }
+  }

@@ -1,3 +1,21 @@
+function showPhoto(url) {
+    var modal = document.getElementById('modal');
+    var modalImg = document.getElementById("modal-img");
+    if (modal == null || modalImg == null) {
+        return;
+    }
+    modalImg.src = url;
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    var modal = document.getElementById('modal');
+    if (modal == null) {
+        return;
+    }
+    modal.style.display = "none";
+}
+
 addEventListener('scroll', function (event) {
     var stickyNavbar = document.getElementById('sticky-navbar');
     if (stickyNavbar == null)
@@ -9,6 +27,7 @@ addEventListener('scroll', function (event) {
         stickyNavbar.classList.remove('pinned');
     }
 });
+
 function toggleTheme() {
     var theme = localStorage.getItem('theme');
     if (theme == null || theme == 'light') {
@@ -19,6 +38,7 @@ function toggleTheme() {
     }
     updateTheme();
 }
+
 function updateTheme() {
     var body = document.getElementsByTagName('body')[0];
     var themeToggler = document.getElementById('theme-toggler');
@@ -36,6 +56,7 @@ function updateTheme() {
         themeToggler.innerHTML = "&#9728;&#65039;";
     }
 }
+
 document.addEventListener('DOMContentLoaded', function () {
     updateTheme();
 }, false);

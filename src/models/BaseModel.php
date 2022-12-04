@@ -7,11 +7,13 @@ class BaseModel {
     public $userEmail;
     public $message;
     public $pageTitle;
-    public function __construct($pageTitle = "", $message = "", $userLoggedIn = false, $username = null, $userEmail = null){
+    public $pageId;
+    public function __construct($pageTitle = "", $message = "", $pageId = 0, $userLoggedIn = false, $username = null, $userEmail = null){
         $this->pageTitle = $pageTitle;
         $this->message = $message;
         $this->userLoggedIn = $userLoggedIn;
         $this->username = $username;
         $this->userEmail = $userEmail;
+        $this->pageId = $pageId;
     }
 }
