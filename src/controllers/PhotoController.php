@@ -65,6 +65,11 @@ class PhotoController extends Controller implements IController {
     protected function validatePhoto(&$model){
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $fileName = $model->image['tmp_name'];
+        if ($fileName == null){ // upload failed, probably file too big or no file selected
+            $model->message = "Plik jest zbyt duży";
+            return false;
+        }
+
         $fileType = finfo_file($finfo, $fileName);
         if ($fileType != "image/jpeg" && $fileType != "image/png") {
             $model->message = "Nieobsługiwany format pliku";
