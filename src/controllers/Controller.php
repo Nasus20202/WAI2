@@ -1,5 +1,6 @@
 <?php
 namespace controllers;
+require_once('../database/Database.php');
 
 interface IController {
     public function index();

@@ -17,7 +17,7 @@ class FrontController
     const DEFAULT_CONTROLLER = 'photo';
     const DEFAULT_ACTION = 'index';
     // base url
-    const BASE_URL = 'http://192.168.56.10:8080/';
+    const BASE_URL = '/';
 
     public function __construct($controller = "", $action = ""){
         if($controller == "" || $action == "")
