@@ -60,6 +60,9 @@ class PhotoController extends Controller implements IController {
         $file = $model->image;
         $targetFilePath = PhotoController::IMAGE_PATH . $filename;
         $tmp_path = $file['tmp_name'];
+        if(!is_dir(PhotoController::IMAGE_PATH)){
+            mkdir(PhotoController::IMAGE_PATH);
+        }
         move_uploaded_file($tmp_path, $targetFilePath);
     }
     protected function validatePhoto(&$model){
