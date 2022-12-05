@@ -97,7 +97,7 @@ class AccountController extends Controller implements IController {
         else if($db->getUserByEmail($email) != null)
             return 2;
         $db->createUser($user);
-        $login($login, $password);
+        $this->login($login, $password);
         return 0;
     }
 
