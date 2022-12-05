@@ -12,7 +12,7 @@ include __DIR__.'/../Layout/header.php';
 ?>
 
 <form method="POST" enctype="multipart/form-data">
-    <h1>Wyślij zdjęcie</h1>
+    <h1><?php echo $title; ?></h1>
     <?php echo $message; ?>
     <input type="text" name="title" placeholder="Tytuł"  required/>
     <input type="text" name="author" placeholder="Autor" required/>

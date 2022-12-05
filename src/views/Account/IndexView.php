@@ -11,7 +11,7 @@ include __DIR__.'/../Layout/header.php';
 ?>
 
 <form method="POST" enctype="multipart/form-data">
-    <h1>Zaloguj się</h1>
+    <h1><?php echo $title; ?></h1>
     <?php echo $message; ?>
     <input type="text" name="login" placeholder="Login"  required/>
     <input type="password" name="password" placeholder="Hasło" required/>

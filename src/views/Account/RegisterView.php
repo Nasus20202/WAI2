@@ -13,7 +13,7 @@ include __DIR__.'/../Layout/header.php';
 ?>
 
 <form method="POST" enctype="multipart/form-data">
-    <h1>Zarejestruj się</h1>
+    <h1><?php echo $title; ?></h1>
     <?php echo $message; ?>
     <input type="text" name="login" placeholder="Login"  required/>
     <input type="email" name="email" placeholder="Adres email"  required/>
