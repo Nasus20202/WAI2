@@ -65,6 +65,19 @@ class Database {
         }
     }
 
+    public function getUserByUsername($username){
+        $userInfo = $this->db->users->findOne(['username' => $username]);
+        if ($userInfo == null)
+            return null;
+        return new User($userInfo['username'], $userInfo['email'], $userInfo['passwordHash'], $userInfo['_id']);
+    }
+    public function getUserByEmail($email){
+        $userInfo = $this->db->users->findOne(['email' => $email]);
+        if ($userInfo == null)
+            return null;
+        return new User($userInfo['username'], $userInfo['email'], $userInfo['passwordHash'], $userInfo['_id']);
+    }
+
     // Photos
     public function getPhotos(){
         $photos = [];

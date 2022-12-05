@@ -10,16 +10,18 @@ class PhotoController extends Controller implements IController {
     const IMAGE_PATH = __BASEDIR__.'/web/images/';
     const IMAGE_URL = '/images/';
     public function index(){
+        $title = "Galeria zdjęć";
         $this->loadModel();
         $db = new Database();
         $photos = $db->getPhotos();
-        $model = new \models\Photo\IndexModel($photos, "Galeria zdjęć");
+        $model = new \models\Photo\IndexModel($photos, $title);
         $this->render($model);
     }
     public function upload(){
+        $title = "Wyślij zdjęcie"; $pageId = 1;
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image'], false, "Prześlij zdjęcia", "", 1);
+            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image'], false, $title, "", $pageId);
             $isFileGood = $this->validatePhoto($model);
             if($isFileGood == 0){
                 $photo = new \database\Photo($model->title, $model->author, $model->extension);
@@ -34,7 +36,7 @@ class PhotoController extends Controller implements IController {
         }
         else {
             $error = isset($_GET['error']) ? $_GET['error'] : 0;
-            $model = new BaseModel("Wyślij zdjęcie", "", 1);
+            $model = new BaseModel($title, "", $pageId);
             switch($error){
                 case 1:
                 case 3:
@@ -47,9 +49,6 @@ class PhotoController extends Controller implements IController {
     }
     public function dispatch(){
         switch($this->getAction()){
-            case 'test':
-                Router::redirect('account');
-                break;
             case 'upload':
                 $this->upload();
                 break;
