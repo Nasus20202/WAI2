@@ -1,7 +1,20 @@
-<?php include __DIR__.'/../Layout/header.php'; ?>
+<?php
+$message = "";
+switch ($model->status) {
+    case 1:
+        $message = "Login jest już zajęty";
+        break;
+    case 2:
+        $message = "Adres email jest już zajęty";
+        break;
+}
+$title = "Zarejestruj się"; $pageId = 3;
+include __DIR__.'/../Layout/header.php';
+?>
 
 <form method="POST" enctype="multipart/form-data">
-    <?php echo $model->message; ?>
+    <h1>Zarejestruj się</h1>
+    <?php echo $message; ?>
     <input type="text" name="login" placeholder="Login"  required/>
     <input type="email" name="email" placeholder="Adres email"  required/>
     <input type="password" name="password" placeholder="Hasło" required/>

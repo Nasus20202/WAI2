@@ -21,22 +21,15 @@ class AccountController extends Controller implements IController {
             }
         } else {
             $error = isset($_GET['error']) ? $_GET['error'] : 0;
-            $model = new BaseModel($title, "", $pageId);
-            switch($error){
-                case 1:
-                    $model->message = "Użytkownik nie istnieje"; break;
-                case 2:
-                    $model->message = "Błędne hasło"; break;
-            }
+            $model = new BaseModel($error);
             $this->render($model);
         }
     }
 
     public function register(){
-        $title = "Zarejestruj się"; $pageId = 3;
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\RegisterModel($_POST['login'], $_POST['email'], $_POST['password'], $title, "", $pageId);
+            $model = new \models\Account\RegisterModel($_POST['login'], $_POST['email'], $_POST['password']);
             $status = $this->createUser($model->login, $model->email, $model->password);
             if($status == 0){
                 Router::redirect();
@@ -45,13 +38,7 @@ class AccountController extends Controller implements IController {
             }
         } else {
             $error = isset($_GET['error']) ? $_GET['error'] : 0;
-            $model = new BaseModel($title, "", $pageId);
-            switch($error){
-                case 1:
-                    $model->message = "Login jest już zajęty"; break;
-                case 2:
-                    $model->message = "Adres email jest już zajęty"; break;
-            }
+            $model = new BaseModel($error);
             $this->render($model);
         }
     }

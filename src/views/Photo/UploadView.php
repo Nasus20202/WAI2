@@ -1,7 +1,19 @@
-<?php include __DIR__.'/../Layout/header.php'; ?>
+<?php
+$message = "";
+switch ($model->status) {
+    case 1:
+    case 3:
+        $message = "Plik jest za duży"; break;
+    case 2:
+        $message = "Niepoprawny format pliku"; break;
+}
+$title = "Wyślij zdjęcie"; $pageId = 1;
+include __DIR__.'/../Layout/header.php';
+?>
 
 <form method="POST" enctype="multipart/form-data">
-    <?php echo $model->message; ?>
+    <h1>Wyślij zdjęcie</h1>
+    <?php echo $message; ?>
     <input type="text" name="title" placeholder="Tytuł"  required/>
     <input type="text" name="author" placeholder="Autor" required/>
     <input type="file" name="image" id="image" required/>

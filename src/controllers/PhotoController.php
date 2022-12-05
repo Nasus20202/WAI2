@@ -36,14 +36,7 @@ class PhotoController extends Controller implements IController {
         }
         else {
             $error = isset($_GET['error']) ? $_GET['error'] : 0;
-            $model = new BaseModel($title, "", $pageId);
-            switch($error){
-                case 1:
-                case 3:
-                    $model->message = "Plik jest za duży"; break;
-                case 2:
-                    $model->message = "Niepoprawny format pliku"; break;
-            }
+            $model = new BaseModel($error);
             $this->render($model);
         }
     }
@@ -76,7 +69,6 @@ class PhotoController extends Controller implements IController {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $fileName = $model->image['tmp_name'];
         if ($fileName == null){ // upload failed, probably file too big or no file selected
-            $model->message = "Plik jest zbyt duży";
             return 1;
         }
 
@@ -94,7 +86,6 @@ class PhotoController extends Controller implements IController {
         }
         $fileSize = filesize($model->image['tmp_name']);
         if ($fileSize > 1*1024*1024) {
-            $model->message = "Plik jest zbyt duży";
             return 3;
         }
         return 0;

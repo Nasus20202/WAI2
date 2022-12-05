@@ -1,5 +1,6 @@
-<?php include __DIR__.'/../Layout/header.php'; ?>
-<?php echo Auth::getUsersName(); ?>
+<?php 
+$title = "Galeria zdjęć"; $pageId = 0;
+include __DIR__.'/../Layout/header.php'; ?>
 <div class="gallery">
     <?php foreach($model->photos as $photo): ?>
         <div class="gallery-photo card">

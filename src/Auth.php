@@ -14,16 +14,16 @@ class Auth{
         return Auth::getFromSession(Auth::username);
     }
     public static function setUsersName($name = null){
-        setSession(Auth::username, $name);
+        Auth::setSession(Auth::username, $name);
     }
     public static function setUsersEmail($email = null){
-        setSession(Auth::email, $name);
+        Auth::setSession(Auth::email, $email);
     }
     public static function setUsersId($id = null){
-        setSession(Auth::userId, $id);
+        Auth::setSession(Auth::userId, $id);
     }
     public static function clearAuthInfo(){
-        setUsersName(); setUsersEmail(); setUsersId();
+        Auth::setUsersName(); Auth::setUsersEmail(); Auth::setUsersId();
     }
 
     protected static function getFromSession($id){
@@ -31,7 +31,7 @@ class Auth{
     }
     protected static function setSession($id, $value = null){
         if($value == null)
-            session_unset($id);
+            unset($_SESSION[$id]);
         else
             $_SESSION[$id] = $value;
     }
