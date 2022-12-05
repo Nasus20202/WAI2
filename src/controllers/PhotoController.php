@@ -19,9 +19,9 @@ class PhotoController extends Controller implements IController {
     public function upload(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image'], "Prześlij zdjęcia");
+            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image'], false, "Prześlij zdjęcia", "", 1);
             $isFileGood = $this->validatePhoto($model);
-            if($isFileGood){
+            if($isFileGood == 0){
                 $photo = new \database\Photo($model->title, $model->author, $model->extension);
                 $db = new Database();
                 $db->createPhoto($photo);
@@ -29,11 +29,20 @@ class PhotoController extends Controller implements IController {
                 Router::redirect('photo');
             }
             else{
-                $this->render($model);
+                Router::redirectToUrl('upload?error='.$isFileGood);
             }
         }
         else {
-            $this->render(new BaseModel("Wyślij zdjęcie", "", 1));
+            $error = isset($_GET['error']) ? $_GET['error'] : 0;
+            $model = new BaseModel("Wyślij zdjęcie", "", 1);
+            switch($error){
+                case 1:
+                case 3:
+                    $model->message = "Plik jest za duży"; break;
+                case 2:
+                    $model->message = "Niepoprawny format pliku"; break;
+            }
+            $this->render($model);
         }
     }
     public function dispatch(){
@@ -52,8 +61,7 @@ class PhotoController extends Controller implements IController {
     }
 
     protected function generatePhotosAndSave(&$model, $id){
-        $extension = pathinfo($model->image['name'], PATHINFO_EXTENSION);
-        $this->saveFile($model, $id . '.' . $extension);
+        $this->saveFile($model, $id . '.' . $model->extension);
     }
 
     protected function saveFile($model, $filename){
@@ -70,13 +78,12 @@ class PhotoController extends Controller implements IController {
         $fileName = $model->image['tmp_name'];
         if ($fileName == null){ // upload failed, probably file too big or no file selected
             $model->message = "Plik jest zbyt duży";
-            return false;
+            return 1;
         }
 
         $fileType = finfo_file($finfo, $fileName);
         if ($fileType != "image/jpeg" && $fileType != "image/png") {
-            $model->message = "Nieobsługiwany format pliku";
-            return false;
+            return 2;
         }
         switch($fileType){
             case "image/jpeg":
@@ -89,8 +96,8 @@ class PhotoController extends Controller implements IController {
         $fileSize = filesize($model->image['tmp_name']);
         if ($fileSize > 1*1024*1024) {
             $model->message = "Plik jest zbyt duży";
-            return false;
+            return 3;
         }
-        return true;
+        return 0;
     }
 }

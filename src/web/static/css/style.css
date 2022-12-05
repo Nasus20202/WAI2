@@ -107,6 +107,27 @@ a {
     padding: 20px;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    width: 30%;
+    margin: 0 auto;
+}
+
+input {
+    background-color: var(--white-1);
+    color: var(--black-2);
+    border-radius: 5px;
+    font-size: large;
+    border: none;
+    margin-left: 10px;
+}
+
+.dark input {
+    color: var(--yellow-0);
+}
+
 button {
     padding: 5px 10px;
     margin: 0 5px;
@@ -183,9 +204,16 @@ button:hover {
     color: var(--yellow-0);
 }
 
-@media only screen and (max-width: 1000px) {}
+@media only screen and (max-width: 1000px) {
+    form {
+        width: 60%;
+    }
+}
 
 @media only screen and (max-width: 600px) {
+    form {
+        width: 100%;
+    }
 
     .navitem,
     .dropbtn {
