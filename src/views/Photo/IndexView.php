@@ -1,5 +1,5 @@
 <?php include __DIR__.'/../Layout/header.php'; ?>
-
+<?php echo Auth::getUsersName(); ?>
 <div class="gallery">
     <?php foreach($model->photos as $photo): ?>
         <div class="gallery-photo card">

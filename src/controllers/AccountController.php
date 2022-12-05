@@ -13,7 +13,7 @@ class AccountController extends Controller implements IController {
         $this->loadModel();
         if($this->method == "POST"){
             $model = new \models\Account\IndexModel($_POST['login'], $_POST['password'], $title, "", $pageId);
-            $credentailsValidation = $this->checkCredentials($model->login, $model->password);
+            $credentailsValidation = $this->login($model->login, $model->password);
             if($credentailsValidation == 0){
                 Router::redirect();
             } else{
@@ -77,6 +77,18 @@ class AccountController extends Controller implements IController {
         return 0;
     }
 
+    public function login($login, $password){
+        $status = $this->checkCredentials($login, $password);
+        if($status == 0){
+            $db = new Database();
+            $user = $db->getUserByUsername($login);
+            $_SESSION['userId'] = $user->id;
+            $_SESSION['username'] = $user->username;
+            $_SESSION['email'] = $user->email;
+        }
+        return $status;
+    }
+
     public function createUser($login, $email, $password){
         $user = new User($login, $email, AccountController::hashPassword($password));
         $db = new Database();
@@ -85,6 +97,7 @@ class AccountController extends Controller implements IController {
         else if($db->getUserByEmail($email) != null)
             return 2;
         $db->createUser($user);
+        $login($login, $password);
         return 0;
     }
 

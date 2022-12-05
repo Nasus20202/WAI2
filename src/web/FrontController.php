@@ -2,6 +2,7 @@
 namespace routing;
 require '../../vendor/autoload.php';
 require_once('../Router.php');
+require_once('../Auth.php');
 
 // global settings
 session_start();

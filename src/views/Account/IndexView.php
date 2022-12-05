@@ -1,5 +1,4 @@
 <?php include __DIR__.'/../Layout/header.php'; ?>
-
 <form method="POST" enctype="multipart/form-data">
     <?php echo $model->message; ?>
     <input type="text" name="login" placeholder="Login"  required/>
