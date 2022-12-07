@@ -4,6 +4,7 @@ use models\BaseModel;
 use routing\Router;
 use database\Database;
 use models\Photo;
+use auth\Auth;
 require_once('Controller.php');
 
 class PhotoController extends Controller implements IController {
@@ -13,7 +14,7 @@ class PhotoController extends Controller implements IController {
         $title = "Galeria zdjęć";
         $this->loadModel();
         $db = new Database();
-        $photos = $db->getPhotos();
+        $photos = $db->getPhotos(Auth::getUserId());
         $model = new \models\Photo\IndexModel($photos, $title);
         $this->render($model);
     }

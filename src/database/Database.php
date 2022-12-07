@@ -79,9 +79,22 @@ class Database {
     }
 
     // Photos
-    public function getPhotos(){
+    public function getAllPhotos(){
         $photos = [];
         foreach($this->db->photos->find()->toArray() as $photo){
+            $photos[] = new Photo($photo['title'], $photo['author'], $photo['extension'], $photo['ownerId'], $photo['private'], $photo['_id']);
+        }
+        return $photos;
+    }
+    public function getPhotos($ownerId, $amount = 2, $offset = 0){
+        $photos = [];
+        //['ownerId' => new ObjectID($ownerId)]
+        foreach($this->db->photos->find(
+            array('$or' => array(
+                array('ownerId' => new ObjectID($ownerId)),
+                array('private' => false)
+            ))
+        )->toArray() as $photo){
             $photos[] = new Photo($photo['title'], $photo['author'], $photo['extension'], $photo['ownerId'], $photo['private'], $photo['_id']);
         }
         return $photos;

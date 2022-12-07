@@ -16,7 +16,7 @@ include __DIR__.'/../Layout/header.php';
     <?php echo $message; ?>
     <input type="text" name="title" placeholder="Tytuł"  required/>
     <input type="text" name="author" placeholder="Autor" value="<?php echo ucfirst($model->username) ?>" required/>
-    <input type="text" name="watermark" placeholder="Znak wodny" required/>
+    <input type="text" name="watermark" placeholder="Znak wodny"/>
     <?php if($model->userLoggedIn): ?>
     <span>
         <input type="checkbox" name="private" id="private"/>
