@@ -11,7 +11,7 @@ $title = "Wyślij zdjęcie"; $pageId = 1;
 include __DIR__.'/../Layout/header.php';
 ?>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data" class="form">
     <h1><?php echo $title; ?></h1>
     <?php echo $message; ?>
     <input type="text" name="title" placeholder="Tytuł"  required/>

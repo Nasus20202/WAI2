@@ -9,7 +9,7 @@ include __DIR__.'/../Layout/header.php'; ?>
 
 Znaleziono <?php echo $model->total; ?> zdjęć
 
-<div class="gallery">
+<form class="gallery" method="POST" action="/saved">
     <?php foreach($model->photos as $photoData): 
         $photo = $photoData['photo'];
         ?>
@@ -17,16 +17,18 @@ Znaleziono <?php echo $model->total; ?> zdjęć
             <div class="card-content">
                 <h2><?php echo $photo->title; ?></h2>
                 <h4>Autor: <?php echo $photo->author; ?></h4>
-                <?php if($model->userLoggedIn && $photo->ownerId == $model->userId): $checkBoxid = 'private-'.$photo->id?>
-                    <input type="checkbox" id="<?php echo $checkBoxid?>" name="private" <?php if($photo->private) echo 'checked'; ?> onchange="changeVisibility('<?php echo $photo->id ?>')">
-                    <label for="<?php echo $checkBoxid?>">Prywatne</label>
+                <input type="checkbox" name="saved[]" <?php if(in_array($photo->id, $model->saved)) echo 'checked disabled'; ?> value="<?php echo $photo->id; ?>">
+                <label">Zapisz</label>
+                <?php if($model->userLoggedIn && $photo->ownerId == $model->userId): ?>
+                    <input type="checkbox" name="private" <?php if($photo->private) echo 'checked'; ?> onchange="changeVisibility('<?php echo $photo->id ?>')">
+                    <label>Prywatne</label>
                 <?php endif ?>
             </div>
             <img class="card-img" src="<?php echo $photoData['thumbnail']; ?>" onclick="showPhoto('<?php echo $photoData['watermark'] ?>')">
         </div>
     <?php endforeach ?>
-</div>
-
+    <input type="submit" id="savePhotos" value="Zapisz"/>
+</form>
 
 
 <div class="pagination">

@@ -79,10 +79,21 @@ class PhotoController extends Controller implements IController {
         }
     }
 
-    protected function saved(){
+    protected function saved($remove = false){
         $this->loadModel();
         if($this->method == "POST"){
-
+            $ids = $this->post('saved');
+            if($ids == null)
+                Router::redirect('saved');
+            $db = new Database();
+            foreach($ids as $id){
+                $photo = $db->getPhoto($id);
+                if($remove)
+                    $this->removeSaved($photo);
+                else if($photo->ownerId == Auth::getUserId() || $photo->private == false)
+                    $this->addSaved($photo);
+            }
+            Router::redirect('saved');
         } else {
             $model = new \models\Photo\SavedModel();
             $photos = $this->getSavedPhotos($model);
@@ -109,6 +120,10 @@ class PhotoController extends Controller implements IController {
                 break;
             case 'saved':
                 $this->saved();
+                break;
+            case 'saved/remove':
+                $this->setAction('saved');
+                $this->saved(true);
                 break;
             default:
                 $this->setAction(\routing\FrontController::DEFAULT_ACTION);
