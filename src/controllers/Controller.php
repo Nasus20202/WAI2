@@ -3,7 +3,6 @@ namespace controllers;
 require_once('../database/Database.php');
 
 interface IController {
-    public function index();
     public function dispatch();
     public function render($model, $view);
 }
@@ -60,13 +59,7 @@ class Controller {
     public static function session($key){
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
-    public static function cookie($key){
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : null;
-    }
-    public static function server($key){
-        return isset($_SERVER[$key]) ? $_SERVER[$key] : null;
-    }
-    public static function files($key){
-        return isset($_FILES[$key]) ? $_FILES[$key] : null;
+    public static function setSession($key, $value){
+        $_SESSION[$key] = $value;
     }
 }

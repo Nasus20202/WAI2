@@ -14,7 +14,8 @@ class PhotoController extends Controller implements IController {
     const IMAGE_URL = '/images/';
     const IMAGE_MAX_SIZE = 10000000;
     const IMAGES_PER_PAGE = 10;
-    public function index(){
+    const SAVED_SESSION = 'saved';
+    protected function index(){
         $this->loadModel();
         $db = new Database();
         $photoPage = $this->get('page') != null ? $this->get('page') : 0;
@@ -35,7 +36,7 @@ class PhotoController extends Controller implements IController {
         $model = new \models\Photo\IndexModel($photoInfo, $photoPage, $photosPerPage, $db->getPhotoCount(Auth::getUserId()));
         $this->render($model);
     }
-    public function upload(){
+    protected function upload(){
         $this->loadModel();
         if($this->method == "POST"){
             $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->files('image'), $this->post('private') != null ? true : false);
@@ -60,7 +61,7 @@ class PhotoController extends Controller implements IController {
             $this->render($model);
         }
     }
-    public function changeVisibility(){
+    protected function changeVisibility(){
         if($this->method != "POST")
             Router::redirect();
         $this->loadModel();
@@ -77,6 +78,27 @@ class PhotoController extends Controller implements IController {
             $db->updatePhoto($image);
         }
     }
+
+    protected function saved(){
+        $this->loadModel();
+        if($this->method == "POST"){
+
+        } else {
+            $model = new \models\Photo\SavedModel();
+            $photos = $this->getSavedPhotos($model);
+            $photoInfo = array();
+            foreach($photos as $photo){
+                $photoInfo[] = [
+                    "photo" => $photo,
+                    "url" => self::IMAGE_URL . $photo->id . '.' . $photo->extension,
+                    "thumbnail" => self::IMAGE_URL . $photo->id . '-min.' . $photo->extension,
+                    "watermark" => self::IMAGE_URL . $photo->id . '-wm.' . $photo->extension
+                ];
+            }
+            $model->saved = $photoInfo;
+            $this->render($model);
+        }
+    }
     public function dispatch(){
         switch($this->getAction()){
             case 'upload':
@@ -85,11 +107,47 @@ class PhotoController extends Controller implements IController {
             case 'changeVisibility':
                 $this->changeVisibility();
                 break;
+            case 'saved':
+                $this->saved();
+                break;
             default:
                 $this->setAction(\routing\FrontController::DEFAULT_ACTION);
                 $this->index();
                 break;
         }
+    }
+
+    protected function getSavedPhotos($model){
+        $keys = $this->getSavedKeys();
+        $db = new Database();
+        $photos = array();
+        foreach($keys as $key){
+            $photo = $db->getPhoto($key);
+            if($photo != null && ($photo->ownerId == $model->userId || $photo->private == false)){
+                $photos[] = $photo;
+            } else {
+                $this->removeSaved($photo);
+            }
+        }
+        return $photos;
+    }
+
+    protected function getSavedKeys(){
+        return $this->session(self::SAVED_SESSION) != null ? $this->session(self::SAVED_SESSION) : array();
+    }
+
+    protected function addSaved($photo){
+        $saved = $this->getSavedKeys();
+        if(in_array($photo->id, $saved))
+            return;
+        $saved[] = $photo->id;
+        $this->setSession(self::SAVED_SESSION, $saved);
+    }
+
+    protected function removeSaved($photo){
+        $saved = $this->getSavedKeys();
+        $saved = array_diff($saved, array($photo->id));
+        $this->setSession(self::SAVED_SESSION, $saved);
     }
 
     protected function generatePhotosAndSave(&$model, $id){
@@ -132,7 +190,7 @@ class PhotoController extends Controller implements IController {
         return 0;
     }
 
-    public function generateThumbnail($model, $id, $filename){
+    protected function generateThumbnail($model, $id, $filename){
         $image = null;
         switch($model->extension){
             case "jpg":
@@ -159,7 +217,7 @@ class PhotoController extends Controller implements IController {
         }
     }
 
-    public function generateWatermark($model, $id, $filename){
+    protected function generateWatermark($model, $id, $filename){
         $image = null;
         switch($model->extension){
             case "jpg":

@@ -9,7 +9,7 @@ use auth\Auth;
 require_once('Controller.php');
 
 class AccountController extends Controller implements IController {
-    public function index(){
+    protected function index(){
         $this->loadModel();
         if($this->method == "POST"){
             $model = new \models\Account\IndexModel(strtolower($this->post('login')), $this->post('password'));
@@ -28,7 +28,7 @@ class AccountController extends Controller implements IController {
         }
     }
 
-    public function register(){
+    protected function register(){
         $this->loadModel();
         if($this->method == "POST"){
             $model = new \models\Account\RegisterModel(strtolower($this->post('login')), $this->post('email'), $this->post('password'));
@@ -45,7 +45,7 @@ class AccountController extends Controller implements IController {
         }
     }
 
-    public function logout(){
+    protected function logout(){
         Auth::clearAuthInfo();
         Router::redirect();
     }
@@ -63,7 +63,7 @@ class AccountController extends Controller implements IController {
         }
     }
 
-    public function checkCredentials($login, $password){
+    protected function checkCredentials($login, $password){
         $db = new Database();
         $user = $db->getUserByUsername($login);
         if($user == null)
@@ -73,7 +73,7 @@ class AccountController extends Controller implements IController {
         return 0;
     }
 
-    public function login($login, $password){
+    protected function login($login, $password){
         $status = $this->checkCredentials($login, $password);
         if($status == 0){
             $db = new Database();
@@ -85,7 +85,7 @@ class AccountController extends Controller implements IController {
         return $status;
     }
 
-    public function createUser($login, $email, $password){
+    protected function createUser($login, $email, $password){
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return 3;
         }
