@@ -18,10 +18,9 @@ class PhotoController extends Controller implements IController {
         $this->render($model);
     }
     public function upload(){
-        $title = "Wyślij zdjęcie"; $pageId = 1;
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($_POST['title'], $_POST['author'], $_FILES['image'], false, $title, "", $pageId);
+            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->post('image'), $this->post('private'));
             $isFileGood = $this->validatePhoto($model);
             if($isFileGood == 0){
                 $photo = new \database\Photo($model->title, $model->author, $model->extension);

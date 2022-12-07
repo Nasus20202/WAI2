@@ -10,10 +10,9 @@ require_once('Controller.php');
 
 class AccountController extends Controller implements IController {
     public function index(){
-        $title = "Zaloguj się"; $pageId = 3;
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\IndexModel(strtolower($_POST['login']), $_POST['password'], $title);
+            $model = new \models\Account\IndexModel(strtolower($this->post('login')), $this->post('password'));
             $credentailsValidation = $this->login($model->login, $model->password);
             if($credentailsValidation == 0){
                 Router::redirect();
@@ -21,6 +20,8 @@ class AccountController extends Controller implements IController {
                 Router::redirectToUrl('/account/login?error='.$credentailsValidation);
             }
         } else {
+            if(Auth::isUserLoggedIn())
+                Router::redirect();
             $error = isset($_GET['error']) ? $_GET['error'] : 0;
             $model = new BaseModel($error);
             $this->render($model);
@@ -30,7 +31,7 @@ class AccountController extends Controller implements IController {
     public function register(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\RegisterModel(strtolower($_POST['login']), $_POST['email'], $_POST['password']);
+            $model = new \models\Account\RegisterModel(strtolower($this->post('login')), $this->post('email'), $this->post('password'));
             $status = $this->createUser($model->login, $model->email, $model->password);
             if($status == 0){
                 Router::redirect();
