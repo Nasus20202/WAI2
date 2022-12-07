@@ -204,9 +204,9 @@ button:hover {
     color: var(--yellow-0);
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1200px) {
     form {
-        width: 60%;
+        width: 50%;
     }
 }
 
@@ -470,7 +470,7 @@ header {
   
   .gallery {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-auto-rows: 1fr;
     column-gap: 30px;
     row-gap: 30px;
@@ -505,15 +505,16 @@ header {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
     animation: bgAnimation 0.5s;
   }
   
   .modal-content {
     margin: auto;
     display: block;
-    max-width: 80vw;
-    max-height: 80vh;
+    max-width: 90vw;
+    max-height: 90vh;
     border-radius: 3px;
     z-index: 2;
   }
@@ -563,8 +564,16 @@ header {
   
     100% {
       opacity: 1;
+      backdrop-filter: blur(5px);
     }
   }
+
+    @media only screen and (max-width: 1800px) {
+        .gallery {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-auto-rows: 1fr;
+        }
+    }
   
   @media only screen and (max-width: 1200px) {
     .gallery {

@@ -7,6 +7,12 @@ switch ($model->status) {
     case 2:
         $message = "Adres email jest już zajęty";
         break;
+    case 3:
+        $message = "Adres email jest niepoprawny";
+        break;
+    case 4:
+        $message = "Hasło musi mieć co najmniej 8 znaków";
+        break;
 }
 $title = "Zarejestruj się"; $pageId = 3;
 include __DIR__.'/../Layout/header.php';

@@ -13,7 +13,7 @@ class AccountController extends Controller implements IController {
         $title = "Zaloguj się"; $pageId = 3;
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\IndexModel($_POST['login'], $_POST['password'], $title, "", $pageId);
+            $model = new \models\Account\IndexModel(strtolower($_POST['login']), $_POST['password'], $title);
             $credentailsValidation = $this->login($model->login, $model->password);
             if($credentailsValidation == 0){
                 Router::redirect();
@@ -30,7 +30,7 @@ class AccountController extends Controller implements IController {
     public function register(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\RegisterModel($_POST['login'], $_POST['email'], $_POST['password']);
+            $model = new \models\Account\RegisterModel(strtolower($_POST['login']), $_POST['email'], $_POST['password']);
             $status = $this->createUser($model->login, $model->email, $model->password);
             if($status == 0){
                 Router::redirect();
@@ -85,6 +85,12 @@ class AccountController extends Controller implements IController {
     }
 
     public function createUser($login, $email, $password){
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 3;
+        }
+        else if(strlen($password) < 8){
+            return 4;
+        }
         $user = new User($login, $email, AccountController::hashPassword($password));
         $db = new Database();
         if($db->getUserByUsername($login) != null)
