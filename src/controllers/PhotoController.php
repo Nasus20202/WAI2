@@ -5,6 +5,8 @@ use routing\Router;
 use database\Database;
 use models\Photo;
 use auth\Auth;
+use routing\Route;
+
 require_once('Controller.php');
 
 class PhotoController extends Controller implements IController {
@@ -21,7 +23,16 @@ class PhotoController extends Controller implements IController {
             $photoPage = 0; $photosPerPage = self::IMAGES_PER_PAGE;
         }
         $photos = $db->getPhotos(Auth::getUserId(), (int)$photosPerPage, (int)$photoPage*$photosPerPage);
-        $model = new \models\Photo\IndexModel($photos, $photoPage, $photosPerPage, $db->getPhotoCount(Auth::getUserId()));
+        $photoInfo = array();
+        foreach($photos as $photo){
+            $photoInfo[] = [
+                "photo" => $photo,
+                "url" => self::IMAGE_URL . $photo->id . '.' . $photo->extension,
+                "thumbnail" => self::IMAGE_URL . $photo->id . '-min.' . $photo->extension,
+                "watermark" => self::IMAGE_URL . $photo->id . '-wm.' . $photo->extension
+            ];
+        }
+        $model = new \models\Photo\IndexModel($photoInfo, $photoPage, $photosPerPage, $db->getPhotoCount(Auth::getUserId()));
         $this->render($model);
     }
     public function upload(){
@@ -49,10 +60,30 @@ class PhotoController extends Controller implements IController {
             $this->render($model);
         }
     }
+    public function changeVisibility(){
+        if($this->method != "POST")
+            Router::redirect();
+        $this->loadModel();
+        $model = new \models\Photo\ChangeVisibilityModel($this->post('id'), $this->post('visibility'));
+        $db = new Database();
+        $image = $db->getPhoto($model->id);
+        if($image->ownerId == Auth::getUserId()){
+            if($model->visibility == 'public')
+                $image->private = false;
+            else if ($model->visibility == 'private')
+                $image->private = true;
+            else 
+                $image->private = !$image->private;
+            $db->updatePhoto($image);
+        }
+    }
     public function dispatch(){
         switch($this->getAction()){
             case 'upload':
                 $this->upload();
+                break;
+            case 'changeVisibility':
+                $this->changeVisibility();
                 break;
             default:
                 $this->setAction(\routing\FrontController::DEFAULT_ACTION);

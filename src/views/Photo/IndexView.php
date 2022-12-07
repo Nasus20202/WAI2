@@ -10,20 +10,24 @@ include __DIR__.'/../Layout/header.php'; ?>
 Znaleziono <?php echo $model->total; ?> zdjęć
 
 <div class="gallery">
-    <?php foreach($model->photos as $photo): 
-        $link = $model->basePath . $photo->id . '.' . $photo->extension;
-        $watermarkLink = $model->basePath . $photo->id . '-wm.' . $photo->extension;
-        $thumbnailLink = $model->basePath . $photo->id . '-min.' . $photo->extension;
+    <?php foreach($model->photos as $photoData): 
+        $photo = $photoData['photo'];
         ?>
         <div class="gallery-photo card">
             <div class="card-content">
                 <h2><?php echo $photo->title; ?></h2>
-                <h4>Autor: <?php echo $photo->author; echo $photo->private ? " (Plik prywatny)" : ""?></h4>
+                <h4>Autor: <?php echo $photo->author; ?></h4>
+                <?php if($model->userLoggedIn && $photo->ownerId == $model->userId): $checkBoxid = 'private-'.$photo->id?>
+                    <input type="checkbox" id="<?php echo $checkBoxid?>" name="private" <?php if($photo->private) echo 'checked'; ?> onchange="changeVisibility('<?php echo $photo->id ?>')">
+                    <label for="<?php echo $checkBoxid?>">Prywatne</label>
+                <?php endif ?>
             </div>
-            <img class="card-img" src="<?php echo $thumbnailLink; ?>" onclick="showPhoto('<?php echo $watermarkLink ?>')">
+            <img class="card-img" src="<?php echo $photoData['thumbnail']; ?>" onclick="showPhoto('<?php echo $photoData['watermark'] ?>')">
         </div>
     <?php endforeach ?>
 </div>
+
+
 
 <div class="pagination">
     <?php if($model->page > 0): ?>
@@ -41,9 +45,11 @@ Znaleziono <?php echo $model->total; ?> zdjęć
     <?php endforeach ?>
 </div>
 
+
+
 <div id="modal" class="modal" onclick="closeModal()">
     <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="modal-img" src="assets/img/logo.png" alt="modal">
+    <img class="modal-content" id="modal-img" alt="modal">
 </div>
 
 <?php include __DIR__.'/../Layout/footer.php'; ?>

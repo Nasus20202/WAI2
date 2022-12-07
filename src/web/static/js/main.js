@@ -1,3 +1,13 @@
+function changeVisibility(id) {
+    let data = new FormData();
+    data.append('id', id);
+    console.log(data);
+    fetch('/changeVisibility', {
+        method: 'POST',
+        body: data
+        })
+}
+
 function showPhoto(url) {
     var modal = document.getElementById('modal');
     var modalImg = document.getElementById("modal-img");
