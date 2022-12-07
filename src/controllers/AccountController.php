@@ -5,6 +5,7 @@ use routing\Router;
 use database\Database;
 use database\User;
 use models\Account;
+use auth\Auth;
 require_once('Controller.php');
 
 class AccountController extends Controller implements IController {
@@ -43,10 +44,17 @@ class AccountController extends Controller implements IController {
         }
     }
 
+    public function logout(){
+        Auth::clearAuthInfo();
+        Router::redirect();
+    }
+
     public function dispatch(){
         switch($this->getAction()){
             case 'register':
                 $this->register(); break;
+            case 'logout':
+                $this->logout(); break;
             default:
                 $this->setAction(); // set dafault action
                 $this->index();

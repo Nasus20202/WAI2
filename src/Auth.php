@@ -1,4 +1,5 @@
 <?php
+namespace auth;
 
 class Auth{
     const username = 'username';
@@ -12,6 +13,9 @@ class Auth{
     }
     public static function getUserId(){
         return Auth::getFromSession(Auth::username);
+    }
+    public static function isUserLoggedIn(){
+        return Auth::getUsersName() != null;
     }
     public static function setUsersName($name = null){
         Auth::setSession(Auth::username, $name);

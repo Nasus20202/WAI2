@@ -1,15 +1,18 @@
 <?php
 namespace models;
 
+use auth\Auth;
+
+
 class BaseModel {
     public $userLoggedIn;
     public $username;
     public $userEmail;
     public $status;
-    public function __construct($status = 0, $userLoggedIn = false, $username = null, $userEmail = null){
+    public function __construct($status = 0){
         $this->status = $status;
-        $this->userLoggedIn = $userLoggedIn;
-        $this->username = $username;
-        $this->userEmail = $userEmail;
+        $this->userLoggedIn = Auth::isUserLoggedIn();
+        $this->username = Auth::getUsersName();
+        $this->userEmail = Auth::getUsersEmail();
     }
 }

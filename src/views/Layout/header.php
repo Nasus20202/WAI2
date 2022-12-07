@@ -20,6 +20,9 @@
         <a href="/" class="navitem<?php if ($pageId == 0){ echo ' currentNav'; };?>">Galeria</a>
         <a href="/upload" class="navitem<?php if ($pageId == 1){ echo ' currentNav'; };?>">Wyślij zdjęcie</a>
         <a href="/saved" class="navitem<?php if ($pageId == 2){ echo ' currentNav'; };?>">Zapamiętane</a>
+        <?php if ($model->userLoggedIn) { ?>
+          <a href="/account/logout" class="navitem">Wyloguj się</a>
+        <?php } else { ?>
         <div class="dropdown">
           <div class="dropbtn<?php if ($pageId == 3){ echo ' currentNav'; };?>">Konto</div>
           <div class="dropdown-content">
@@ -27,5 +30,5 @@
             <a class="dropdown-link" href="/account/register">Załóż konto</a>
           </div>
         </div>
+        <?php } ?>
       </nav>
-      <?php echo Auth::getUsersName(); ?>

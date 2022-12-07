@@ -1,6 +1,11 @@
 <?php 
 $title = "Galeria zdjęć"; $pageId = 0;
 include __DIR__.'/../Layout/header.php'; ?>
+
+<?php if($model->userLoggedIn) { ?>
+    <h1>Witaj, <?php echo $model->username ?>!</h1>
+<?php } ?>
+
 <div class="gallery">
     <?php foreach($model->photos as $photo): ?>
         <div class="gallery-photo card">
