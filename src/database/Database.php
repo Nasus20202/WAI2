@@ -79,26 +79,38 @@ class Database {
     }
 
     // Photos
-    public function getAllPhotos(){
+    public function getPhotos($ownerId = null, $amount = null, $offset = null, $all = false){
         $photos = [];
-        foreach($this->db->photos->find()->toArray() as $photo){
-            $photos[] = new Photo($photo['title'], $photo['author'], $photo['extension'], $photo['ownerId'], $photo['private'], $photo['_id']);
-        }
-        return $photos;
-    }
-    public function getPhotos($ownerId, $amount = 2, $offset = 0){
-        $photos = [];
-        //['ownerId' => new ObjectID($ownerId)]
-        foreach($this->db->photos->find(
-            array('$or' => array(
+        $query = array('private' => false);
+        $options = array();
+        if($all)
+            $query = array();
+        if($ownerId != null)
+            $query = array('$or' => array(
                 array('ownerId' => new ObjectID($ownerId)),
                 array('private' => false)
-            ))
-        )->toArray() as $photo){
+            ));
+        if($amount != null)
+            $options['limit'] = $amount;
+        if($offset != null)
+            $options['skip'] = $offset;
+        foreach($this->db->photos->find($query, $options)->toArray() as $photo){
             $photos[] = new Photo($photo['title'], $photo['author'], $photo['extension'], $photo['ownerId'], $photo['private'], $photo['_id']);
         }
         return $photos;
     }
+    public function getPhotoCount($ownerId = null, $all = false){
+        $query = array('private' => false);
+        if($all)
+            $query = array();
+        if($ownerId != null)
+            $query = array('$or' => array(
+                array('ownerId' => new ObjectID($ownerId)),
+                array('private' => false)
+            ));
+        return $this->db->photos->count($query);
+    }
+
     public function getPhoto($id){
         $photoInfo = $this->db->photos->findOne(['_id' => new ObjectID($id)]);
         if ($photoInfo == null)

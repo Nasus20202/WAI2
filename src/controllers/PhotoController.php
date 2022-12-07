@@ -10,12 +10,18 @@ require_once('Controller.php');
 class PhotoController extends Controller implements IController {
     const IMAGE_PATH = __BASEDIR__.'/web/images/';
     const IMAGE_URL = '/images/';
+    const IMAGE_MAX_SIZE = 10000000;
+    const IMAGES_PER_PAGE = 10;
     public function index(){
-        $title = "Galeria zdjęć";
         $this->loadModel();
         $db = new Database();
-        $photos = $db->getPhotos(Auth::getUserId());
-        $model = new \models\Photo\IndexModel($photos, $title);
+        $photoPage = $this->get('page') != null ? $this->get('page') : 0;
+        $photosPerPage = $this->get('amount') != null ? $this->get('amount') : self::IMAGES_PER_PAGE;
+        if($photoPage < 0 || $photosPerPage < 0){
+            $photoPage = 0; $photosPerPage = self::IMAGES_PER_PAGE;
+        }
+        $photos = $db->getPhotos(Auth::getUserId(), (int)$photosPerPage, (int)$photoPage*$photosPerPage);
+        $model = new \models\Photo\IndexModel($photos, $photoPage, $photosPerPage, $db->getPhotoCount(Auth::getUserId()));
         $this->render($model);
     }
     public function upload(){
@@ -89,7 +95,7 @@ class PhotoController extends Controller implements IController {
                 break;
         }
         $fileSize = filesize($model->image['tmp_name']);
-        if ($fileSize > 1*1024*1024) {
+        if ($fileSize > PhotoController::IMAGE_MAX_SIZE) {
             return 3;
         }
         return 0;

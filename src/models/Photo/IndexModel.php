@@ -8,9 +8,15 @@ require_once(__DIR__.'/../BaseModel.php');
 class IndexModel extends BaseModel {
     public $photos;
     public $basePath;
-    public function __construct($photos, $status = 0, $basePath = PhotoController::IMAGE_URL){
+    public $page;
+    public $amount;
+    public $total;
+    public function __construct($photos, $page = 0, $amount = PhotoController::IMAGES_PER_PAGE, $total = 0, $status = 0, $basePath = PhotoController::IMAGE_URL){
         parent::__construct($status);
         $this->photos = $photos;
         $this->basePath = $basePath;
+        $this->page = $page;
+        $this->amount = $amount;
+        $this->total = $total;
     }
 }
