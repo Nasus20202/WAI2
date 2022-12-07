@@ -15,7 +15,14 @@ include __DIR__.'/../Layout/header.php';
     <h1><?php echo $title; ?></h1>
     <?php echo $message; ?>
     <input type="text" name="title" placeholder="Tytuł"  required/>
-    <input type="text" name="author" placeholder="Autor" required/>
+    <input type="text" name="author" placeholder="Autor" value="<?php echo ucfirst($model->username) ?>" required/>
+    <input type="text" name="author" placeholder="Znak wodny" required/>
+    <?php if($model->userLoggedIn): ?>
+    <span>
+        <input type="checkbox" name="private" id="private"/>
+        <label for="private">Prywatne</label>
+    </span>
+    <?php endif; ?>
     <input type="file" name="image" id="image" required/>
     <button type="submit">Wyślij</button>
 </form>

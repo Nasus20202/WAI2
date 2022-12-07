@@ -9,13 +9,15 @@ include __DIR__.'/../Layout/header.php'; ?>
 <div class="gallery">
     <?php foreach($model->photos as $photo): 
         $link = $model->basePath . $photo->id . '.' . $photo->extension;
+        $watermarkLink = $model->basePath . $photo->id . '-wm.' . $photo->extension;
+        $thumbnailLink = $model->basePath . $photo->id . '-min.' . $photo->extension;
         ?>
         <div class="gallery-photo card">
             <div class="card-content">
-                <h2><a href="<?php echo $link ?>"><?php echo $photo->title; ?></a></h2>
+                <h2><?php echo $photo->title; ?></h2>
                 <h4>Autor: <?php echo $photo->author; ?></h3>
             </div>
-            <img class="card-img" src="<?php echo $link; ?>" onclick="showPhoto('<?php echo $model->basePath . $photo->id . '.' . $photo->extension ?>')">
+            <img class="card-img" src="<?php echo $thumbnailLink; ?>" onclick="showPhoto('<?php echo $watermarkLink ?>')">
         </div>
     <?php endforeach ?>
 </div>

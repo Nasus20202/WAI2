@@ -20,7 +20,7 @@ class PhotoController extends Controller implements IController {
     public function upload(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->post('image'), $this->post('private'));
+            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->files('image'), $this->post('private'));
             $isFileGood = $this->validatePhoto($model);
             if($isFileGood == 0){
                 $photo = new \database\Photo($model->title, $model->author, $model->extension);
@@ -34,7 +34,7 @@ class PhotoController extends Controller implements IController {
             }
         }
         else {
-            $error = $this->get('error');
+            $error = isset($_GET['error']) ? $_GET['error'] : 0;
             $model = new BaseModel($error);
             $this->render($model);
         }
@@ -52,17 +52,19 @@ class PhotoController extends Controller implements IController {
     }
 
     protected function generatePhotosAndSave(&$model, $id){
-        $this->saveFile($model, $id . '.' . $model->extension);
+        $baseFilePath = $this->saveUploadedFile($model->image, $id . '.' . $model->extension);
+        $this->generateThumbnail($model, $id, $baseFilePath);
+        $this->generateWatermark($model, $id, $baseFilePath);
     }
 
-    protected function saveFile($model, $filename){
-        $file = $model->image;
+    protected function saveUploadedFile($file, $filename){
         $targetFilePath = PhotoController::IMAGE_PATH . $filename;
         $tmp_path = $file['tmp_name'];
         if(!is_dir(PhotoController::IMAGE_PATH)){
             mkdir(PhotoController::IMAGE_PATH);
         }
         move_uploaded_file($tmp_path, $targetFilePath);
+        return $targetFilePath;
     }
     protected function validatePhoto(&$model){
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -70,7 +72,6 @@ class PhotoController extends Controller implements IController {
         if ($fileName == null){ // upload failed, probably file too big or no file selected
             return 1;
         }
-
         $fileType = finfo_file($finfo, $fileName);
         if ($fileType != "image/jpeg" && $fileType != "image/png") {
             return 2;
@@ -88,5 +89,54 @@ class PhotoController extends Controller implements IController {
             return 3;
         }
         return 0;
+    }
+
+    public function generateThumbnail(&$model, $id, $filename){
+        $image = null;
+        switch($model->extension){
+            case "jpg":
+                $image = imagecreatefromjpeg($filename);
+                break;
+            case "png":
+                $image = imagecreatefrompng($filename);
+                break;
+        }
+        $width = imagesx($image);
+        $height = imagesy($image);
+        $newWidth = 200;
+        $newHeight = 125;
+        $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
+        imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        $thumbnailPath = PhotoController::IMAGE_PATH . $id . '-min.' . $model->extension;
+        switch($model->extension){
+            case "jpg":
+                imagejpeg($thumbnail, $thumbnailPath);
+                break;
+            case "png":
+                imagepng($thumbnail, $thumbnailPath);
+                break;
+        }
+    }
+
+    public function generateWatermark(&$model, $id, $filename){
+        $image = null;
+        switch($model->extension){
+            case "jpg":
+                $image = imagecreatefromjpeg($filename);
+                break;
+            case "png":
+                $image = imagecreatefrompng($filename);
+                break;
+        }
+        imagettftext($image, 20, 0, 10, 30, imagecolorallocate($image, 255, 255, 255), __BASEDIR__ . 'web/static/fonts/Lato.ttf', $model->watermark);
+        $watermarkPath = PhotoController::IMAGE_PATH . $id . '-wm.' . $model->extension;
+        switch($model->extension){
+            case "jpg":
+                imagejpeg($image, $watermarkPath);
+                break;
+            case "png":
+                imagepng($image, $watermarkPath);
+                break;
+        }
     }
 }
