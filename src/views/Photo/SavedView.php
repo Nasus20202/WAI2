@@ -19,13 +19,15 @@ include __DIR__.'/../Layout/header.php'; ?>
                 <input type="checkbox" name="saved[]" value="<?php echo $photo->id; ?>">
                 <label">Usuń</label>
             </div>
-            <img class="card-img" src="<?php echo $savedData['thumbnail']; ?>" onclick="savedData('<?php echo $photoData['watermark'] ?>')">
+            <img class="card-img" src="<?php echo $savedData['thumbnail']; ?>" onclick="showPhoto('<?php echo $savedData['watermark'] ?>')">
         </div>
     <?php endforeach ?>
     <input type="submit" id="savePhotos" value="Usuń wybrane"/>
 </form>
 
-
-
+<div id="modal" class="modal" onclick="closeModal()">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modal-img" alt="modal">
+</div>
 
 <?php include __DIR__.'/../Layout/footer.php'; ?>

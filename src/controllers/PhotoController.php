@@ -243,8 +243,9 @@ class PhotoController extends Controller implements IController {
                 break;
         }
         $height = imagesy($image);
-        $witdh = imagesx($image);
-        imagettftext($image, 100, 45, $height/2, $witdh/2, imagecolorallocate($image, 255, 255, 255), __BASEDIR__ . 'web/static/fonts/Lato.ttf', $model->watermark);
+        $width = imagesx($image);
+
+        imagettftext($image, 100, 25, $width/10, $height*9/10, imagecolorallocatealpha($image, 255, 255, 255, 50), __BASEDIR__ . 'web/static/fonts/Lato.ttf', $model->watermark);
         $watermarkPath = PhotoController::IMAGE_PATH . $id . '-wm.' . $model->extension;
         switch($model->extension){
             case "jpg":

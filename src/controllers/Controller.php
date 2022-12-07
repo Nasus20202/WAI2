@@ -62,4 +62,10 @@ class Controller {
     public static function setSession($key, $value){
         $_SESSION[$key] = $value;
     }
+    public static function removeSession($key){
+        unset($_SESSION[$key]);
+    }
+    public static function files($key){
+        return isset($_FILES[$key]) ? $_FILES[$key] : null;
+    }
 }

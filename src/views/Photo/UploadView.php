@@ -14,9 +14,9 @@ include __DIR__.'/../Layout/header.php';
 <form method="POST" enctype="multipart/form-data" class="form">
     <h1><?php echo $title; ?></h1>
     <?php echo $message; ?>
-    <input type="text" name="title" placeholder="Tytuł"  required/>
-    <input type="text" name="author" placeholder="Autor" value="<?php echo ucfirst($model->username) ?>" required/>
-    <input type="text" name="watermark" placeholder="Znak wodny"/>
+    <input type="text" name="title" title="Tytuł" placeholder="Tytuł"  required/>
+    <input type="text" name="author" title="Autor" placeholder="Autor" value="<?php echo ucfirst($model->username) ?>" required/>
+    <input type="text" name="watermark" title="Znak wodny" placeholder="Znak wodny"/>
     <?php if($model->userLoggedIn): ?>
     <span>
         <input type="checkbox" name="private" id="private"/>

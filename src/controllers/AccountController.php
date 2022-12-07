@@ -31,7 +31,7 @@ class AccountController extends Controller implements IController {
     protected function register(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\RegisterModel(strtolower($this->post('login')), $this->post('email'), $this->post('password'));
+            $model = new \models\Account\RegisterModel(strtolower($this->post('login')), strtolower($this->post('email')), $this->post('password'));
             $status = $this->createUser($model->login, $model->email, $model->password);
             if($status == 0){
                 Router::redirect();
