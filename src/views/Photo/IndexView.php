@@ -27,17 +27,17 @@ Znaleziono <?php echo $model->total; ?> zdjęć
 
 <div class="pagination">
     <?php if($model->page > 0): ?>
-        <a href="/photo/index?page=<?php echo $model->page - 1; ?>&amount=<?php echo $model->amount?>">Poprzednia &laquo;</a>
+        <a href="?page=<?php echo $model->page - 1; ?>&amount=<?php echo $model->amount?>">Poprzednia &laquo;</a>
     <?php endif ?>
     Strona <?php echo $model->page + 1; ?> z <?php echo $totalPages; ?>
     <?php if($model->page < $totalPages - 1): ?>
-        <a href="/photo/index?amount=<?php echo $model->amount?>"> Nestępna &raquo;</a>
+        <a href="?page=<?php echo $model->page + 1; ?>&amount=<?php echo $model->amount?>"> Następna &raquo;</a>
     <?php endif ?>
 </div>
 <div class="imagesPerPage">
     Zdjęć na stronę: 
     <?php foreach([10, 20, 50, 100] as $i): ?>
-        <a href="/photo/index?amount=<?php echo $i?>"><?php echo $i; ?></a>
+        <a href="?amount=<?php echo $i?>"><?php echo $i; ?></a>
     <?php endforeach ?>
 </div>
 
