@@ -22,7 +22,7 @@ class AccountController extends Controller implements IController {
         } else {
             if(Auth::isUserLoggedIn())
                 Router::redirect();
-            $error = isset($_GET['error']) ? $_GET['error'] : 0;
+            $error = $this->get('error');
             $model = new BaseModel($error);
             $this->render($model);
         }
@@ -39,7 +39,7 @@ class AccountController extends Controller implements IController {
                 Router::redirectToUrl('/account/register?error='.$status);
             }
         } else {
-            $error = isset($_GET['error']) ? $_GET['error'] : 0;
+            $error = $this->get('error');
             $model = new BaseModel($error);
             $this->render($model);
         }
@@ -78,9 +78,9 @@ class AccountController extends Controller implements IController {
         if($status == 0){
             $db = new Database();
             $user = $db->getUserByUsername($login);
-            $_SESSION['userId'] = $user->id;
-            $_SESSION['username'] = $user->username;
-            $_SESSION['email'] = $user->email;
+            Auth::setUsersId($user->id);
+            Auth::setUsersName($user->username);
+            Auth::setUsersEmail($user->email);
         }
         return $status;
     }

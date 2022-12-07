@@ -34,7 +34,7 @@ class PhotoController extends Controller implements IController {
             }
         }
         else {
-            $error = isset($_GET['error']) ? $_GET['error'] : 0;
+            $error = $this->get('error');
             $model = new BaseModel($error);
             $this->render($model);
         }
