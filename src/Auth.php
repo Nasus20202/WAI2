@@ -12,7 +12,7 @@ class Auth{
         return Auth::getFromSession(Auth::email);
     }
     public static function getUserId(){
-        return Auth::getFromSession(Auth::username);
+        return Auth::getFromSession(Auth::userId);
     }
     public static function isUserLoggedIn(){
         return Auth::getUsersName() != null;

@@ -20,10 +20,13 @@ class PhotoController extends Controller implements IController {
     public function upload(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->files('image'), $this->post('private'));
+            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->files('image'), $this->post('private') != null ? true : false);
             $isFileGood = $this->validatePhoto($model);
             if($isFileGood == 0){
-                $photo = new \database\Photo($model->title, $model->author, $model->extension);
+                if($model->userLoggedIn){
+                    $photo = new \database\Photo($model->title, $model->author, $model->extension, $model->userId, $model->private);}
+                else{
+                    $photo = new \database\Photo($model->title, $model->author, $model->extension);}
                 $db = new Database();
                 $db->createPhoto($photo);
                 $this->generatePhotosAndSave($model, $photo->id);
@@ -91,7 +94,7 @@ class PhotoController extends Controller implements IController {
         return 0;
     }
 
-    public function generateThumbnail(&$model, $id, $filename){
+    public function generateThumbnail($model, $id, $filename){
         $image = null;
         switch($model->extension){
             case "jpg":
@@ -118,7 +121,7 @@ class PhotoController extends Controller implements IController {
         }
     }
 
-    public function generateWatermark(&$model, $id, $filename){
+    public function generateWatermark($model, $id, $filename){
         $image = null;
         switch($model->extension){
             case "jpg":
@@ -128,7 +131,9 @@ class PhotoController extends Controller implements IController {
                 $image = imagecreatefrompng($filename);
                 break;
         }
-        imagettftext($image, 20, 0, 10, 30, imagecolorallocate($image, 255, 255, 255), __BASEDIR__ . 'web/static/fonts/Lato.ttf', $model->watermark);
+        $height = imagesy($image);
+        $witdh = imagesx($image);
+        imagettftext($image, 100, 45, $height/2, $witdh/2, imagecolorallocate($image, 255, 255, 255), __BASEDIR__ . 'web/static/fonts/Lato.ttf', $model->watermark);
         $watermarkPath = PhotoController::IMAGE_PATH . $id . '-wm.' . $model->extension;
         switch($model->extension){
             case "jpg":
