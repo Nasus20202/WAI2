@@ -24,15 +24,7 @@ class PhotoController extends Controller implements IController {
             $photoPage = 0; $photosPerPage = self::IMAGES_PER_PAGE;
         }
         $photos = $db->getPhotos(Auth::getUserId(), (int)$photosPerPage, (int)$photoPage*$photosPerPage);
-        $photoInfo = array();
-        foreach($photos as $photo){
-            $photoInfo[] = [
-                "photo" => $photo,
-                "url" => self::IMAGE_URL . $photo->id . '.' . $photo->extension,
-                "thumbnail" => self::IMAGE_URL . $photo->id . '-min.' . $photo->extension,
-                "watermark" => self::IMAGE_URL . $photo->id . '-wm.' . $photo->extension
-            ];
-        }
+        $photoInfo = $this->photosToPhotosInfo($photos);
         $model = new \models\Photo\IndexModel($photoInfo, $photoPage, $photosPerPage, $db->getPhotoCount(Auth::getUserId()));
         $this->render($model);
     }
@@ -97,16 +89,21 @@ class PhotoController extends Controller implements IController {
         } else {
             $model = new \models\Photo\SavedModel();
             $photos = $this->getSavedPhotos($model);
-            $photoInfo = array();
-            foreach($photos as $photo){
-                $photoInfo[] = [
-                    "photo" => $photo,
-                    "url" => self::IMAGE_URL . $photo->id . '.' . $photo->extension,
-                    "thumbnail" => self::IMAGE_URL . $photo->id . '-min.' . $photo->extension,
-                    "watermark" => self::IMAGE_URL . $photo->id . '-wm.' . $photo->extension
-                ];
-            }
-            $model->saved = $photoInfo;
+            $model->saved = $this->photosToPhotosInfo($photos);
+            $this->render($model);
+        }
+    }
+    protected function search(){
+        $this->loadModel();
+        if($this->method == "POST"){
+            $this->setAction('searchPartial');
+            $model = new \models\Photo\SearchModel($this->post('query'));
+            $db = new Database();
+            $photos = $db->searchPhotos($model->query, $model->userId);
+            $model->result = $this->photosToPhotosInfo($photos);
+            $this->render($model);
+        } else {
+            $model = new BaseModel();
             $this->render($model);
         }
     }
@@ -125,11 +122,26 @@ class PhotoController extends Controller implements IController {
                 $this->setAction('saved');
                 $this->saved(true);
                 break;
+            case 'search':
+                $this->search();
+                break;
             default:
                 $this->setAction(\routing\FrontController::DEFAULT_ACTION);
                 $this->index();
                 break;
         }
+    }
+    protected function photosToPhotosInfo($photos){
+        $photoInfo = array();
+        foreach($photos as $photo){
+            $photoInfo[] = [
+                "photo" => $photo,
+                "url" => self::IMAGE_URL . $photo->id . '.' . $photo->extension,
+                "thumbnail" => self::IMAGE_URL . $photo->id . '-min.' . $photo->extension,
+                "watermark" => self::IMAGE_URL . $photo->id . '-wm.' . $photo->extension
+            ];
+        }
+        return $photoInfo;
     }
 
     protected function getSavedPhotos($model){
@@ -161,6 +173,8 @@ class PhotoController extends Controller implements IController {
 
     protected function removeSaved($photo){
         $saved = $this->getSavedKeys();
+        if($photo == null)
+            return;
         $saved = array_diff($saved, array($photo->id));
         $this->setSession(self::SAVED_SESSION, $saved);
     }

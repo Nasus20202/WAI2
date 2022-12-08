@@ -111,6 +111,21 @@ class Database {
         return $this->db->photos->count($query);
     }
 
+    public function searchPhotos($search, $userId = null){
+        $photos = [];
+        $privacyQuery = array('private' => false);
+        if($userId != null)
+            $privacyQuery = array('$or' => array(
+                array('ownerId' => new ObjectID($userId)),
+                array('private' => false),
+            ));
+        $query = array('$and' => array(array('title' => ['$regex' => "$search", '$options' => 'i']), $privacyQuery));
+        foreach($this->db->photos->find($query)->toArray() as $photo){
+            $photos[] = new Photo($photo['title'], $photo['author'], $photo['extension'], $photo['ownerId'], $photo['private'], $photo['_id']);
+        }
+        return $photos;
+    }
+
     public function getPhoto($id){
         $photoInfo = $this->db->photos->findOne(['_id' => new ObjectID($id)]);
         if ($photoInfo == null)

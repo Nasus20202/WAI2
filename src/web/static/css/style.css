@@ -122,9 +122,9 @@ input {
     background-color: var(--white-1);
     color: var(--black-2);
     border-radius: 5px;
-    font-size: large;
+    font-size: 1em;
     border: none;
-    margin-left: 10px;
+    margin: 2px 5px;
 }
 
 .dark input {
@@ -248,8 +248,7 @@ body {
 
 nav {
     display: grid;
-    /*overflow: hidden;*/
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     column-gap: 2rem;
 }
 
@@ -631,4 +630,10 @@ input[type=checkbox]
     background-color: var(--white-2);
     padding: 0.3rem;
     border-radius: 10px 0 0 0;
+  }
+
+  #search {
+    font-size: 1.3em;
+    width: 98%;
+    padding: 10px;
   }
