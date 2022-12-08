@@ -9,10 +9,12 @@ class RegisterModel extends BaseModel {
     public $login;
     public $email;
     public $password;
-    public function __construct($login, $email, $password, $status = 0){
+    public $passwordRepeat;
+    public function __construct($login, $email, $password, $passwordRepeat, $status = 0){
         parent::__construct($status);
         $this->login = $login;
         $this->email = $email;
         $this->password = $password;
+        $this->passwordRepeat = $passwordRepeat;
     }
 }

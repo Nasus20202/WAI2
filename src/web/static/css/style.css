@@ -279,7 +279,7 @@ nav {
     max-width: 80vw;
     margin-left: 10vw;
     margin-right: 10vw;
-    margin-bottom: 35px;
+    margin-bottom: 60px;
 }
 
 .content {
@@ -612,13 +612,21 @@ header {
     column-gap: 10px;
     font-size: 17px;
 }
-
+input {
+    accent-color: var(--yellow-0);
+}
 input[type=checkbox]
 {
-  transform: scale(2);
-  padding: 10px;
-  margin-right: 10px;
-  accent-color: var(--yellow-0);
+    transform: scale(2);
+    padding: 10px;
+    margin-right: 10px;
+  
+}
+input[type=radio]
+{
+    transform: scale(1.5);
+    padding: 10px;
+    margin-right: 10px;
 }
 
 #savePhotos {
@@ -632,8 +640,8 @@ input[type=checkbox]
     border-radius: 10px 0 0 0;
   }
 
-  #search {
+#search {
     font-size: 1.3em;
     width: 98%;
     padding: 10px;
-  }
+}

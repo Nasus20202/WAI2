@@ -31,8 +31,8 @@ class AccountController extends Controller implements IController {
     protected function register(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Account\RegisterModel(strtolower($this->post('login')), strtolower($this->post('email')), $this->post('password'));
-            $status = $this->createUser($model->login, $model->email, $model->password);
+            $model = new \models\Account\RegisterModel(strtolower($this->post('login')), strtolower($this->post('email')), $this->post('password'), $this->post('passwordRepeat'));
+            $status = $this->createUser($model->login, $model->email, $model->password, $model->passwordRepeat);
             if($status == 0){
                 Router::redirect();
             } else{
@@ -85,12 +85,15 @@ class AccountController extends Controller implements IController {
         return $status;
     }
 
-    protected function createUser($login, $email, $password){
+    protected function createUser($login, $email, $password, $passwordRepeat){
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return 3;
         }
         else if(strlen($password) < 8){
             return 4;
+        }
+        else if($password != $passwordRepeat){
+            return 5;
         }
         $user = new User($login, $email, AccountController::hashPassword($password));
         $db = new Database();

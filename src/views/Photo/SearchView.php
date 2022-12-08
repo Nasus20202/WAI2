@@ -1,5 +1,5 @@
 <?php 
-$title = "Wyszukiwarka"; $pageId = 0;
+$title = "Wyszukiwarka"; $pageId = 3;
 include __DIR__.'/../Layout/header.php'; ?>
 
 <h1>Wyszukiwarka zdjęć</h1>

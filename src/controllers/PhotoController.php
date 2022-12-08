@@ -12,7 +12,7 @@ require_once('Controller.php');
 class PhotoController extends Controller implements IController {
     const IMAGE_PATH = __BASEDIR__.'/web/images/';
     const IMAGE_URL = '/images/';
-    const IMAGE_MAX_SIZE = 10000000;
+    const IMAGE_MAX_SIZE = 1000000;
     const IMAGES_PER_PAGE = 10;
     const SAVED_SESSION = 'saved';
     protected function index(){
@@ -31,7 +31,7 @@ class PhotoController extends Controller implements IController {
     protected function upload(){
         $this->loadModel();
         if($this->method == "POST"){
-            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->files('image'), $this->post('private') != null ? true : false);
+            $model = new \models\Photo\UploadModel($this->post('title'), $this->post('author'), $this->post('watermark'), $this->files('image'), $this->post('visibility') == 'private' ? true : false);
             $isFileGood = $this->validatePhoto($model);
             if($isFileGood == 0){
                 if($model->userLoggedIn){
@@ -197,12 +197,14 @@ class PhotoController extends Controller implements IController {
     protected function validatePhoto(&$model){
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $fileName = $model->image['tmp_name'];
+        $validMime = true;
+        $validSize = true;
         if ($fileName == null){ // upload failed, probably file too big or no file selected
             return 1;
         }
         $fileType = finfo_file($finfo, $fileName);
         if ($fileType != "image/jpeg" && $fileType != "image/png") {
-            return 2;
+            $validMime = false;
         }
         switch($fileType){
             case "image/jpeg":
@@ -214,7 +216,16 @@ class PhotoController extends Controller implements IController {
         }
         $fileSize = filesize($model->image['tmp_name']);
         if ($fileSize > PhotoController::IMAGE_MAX_SIZE) {
+            $validSize = false;
+        }
+        if(!$validMime && !$validSize){
+            return 2;
+        } 
+        if(!$validMime){
             return 3;
+        }
+        if(!$validSize){
+            return 4;
         }
         return 0;
     }
